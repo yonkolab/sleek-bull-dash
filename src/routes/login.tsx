@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useId } from 'react'
 import { toast } from 'sonner'
 import { Loader2, Layers } from 'lucide-react'
 import { authClient } from '#/lib/auth-client'
@@ -14,6 +14,7 @@ export const Route = createFileRoute('/login')({
 
 function LoginPage() {
   const navigate = useNavigate()
+  const uid = useId()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -58,9 +59,9 @@ function LoginPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor={`${uid}-email`}>Email</Label>
                 <Input
-                  id="email"
+                  id={`${uid}-email`}
                   type="email"
                   placeholder="admin@example.com"
                   value={email}
@@ -70,9 +71,9 @@ function LoginPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor={`${uid}-password`}>Password</Label>
                 <Input
-                  id="password"
+                  id={`${uid}-password`}
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

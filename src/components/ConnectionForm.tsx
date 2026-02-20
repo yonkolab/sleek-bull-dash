@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useId } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
@@ -36,6 +36,7 @@ export function ConnectionForm({ existing }: Props) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const uid = useId()
 
   const [form, setForm] = useState<FormState>({
     name: existing?.name ?? '',
@@ -118,7 +119,7 @@ export function ConnectionForm({ existing }: Props) {
     mutationFn: () =>
       $updateConnection({
         data: {
-          id: existing!.id,
+          id: existing?.id ?? '',
           data: {
             name: form.name,
             host: form.host,
@@ -145,7 +146,7 @@ export function ConnectionForm({ existing }: Props) {
   })
 
   const testMutation = useMutation({
-    mutationFn: () => $testConnection({ data: { id: existing!.id } }),
+    mutationFn: () => $testConnection({ data: { id: existing?.id ?? '' } }),
     onSuccess: (result) => {
       if (result.success) {
         setTestResult({ success: true, message: `Connected! Found ${result.queuesFound} queues.` })
@@ -175,9 +176,9 @@ export function ConnectionForm({ existing }: Props) {
       <div className="space-y-4">
         <h2 className="text-sm font-semibold">Redis Connection</h2>
 
-        <Field label="Name" htmlFor="name">
+        <Field label="Name" htmlFor={`${uid}-name`}>
           <Input
-            id="name"
+            id={`${uid}-name`}
             value={form.name}
             onChange={(e) => update('name', e.target.value)}
             placeholder="Production"
@@ -187,9 +188,9 @@ export function ConnectionForm({ existing }: Props) {
 
         <div className="grid grid-cols-3 gap-3">
           <div className="col-span-2">
-            <Field label="Host" htmlFor="host">
+            <Field label="Host" htmlFor={`${uid}-host`}>
               <Input
-                id="host"
+                id={`${uid}-host`}
                 value={form.host}
                 onChange={(e) => update('host', e.target.value)}
                 placeholder="localhost"
@@ -197,9 +198,9 @@ export function ConnectionForm({ existing }: Props) {
               />
             </Field>
           </div>
-          <Field label="Port" htmlFor="port">
+          <Field label="Port" htmlFor={`${uid}-port`}>
             <Input
-              id="port"
+              id={`${uid}-port`}
               type="number"
               value={form.port}
               onChange={(e) => update('port', e.target.value)}
@@ -211,9 +212,9 @@ export function ConnectionForm({ existing }: Props) {
 
         <div className="grid grid-cols-3 gap-3">
           <div className="col-span-2">
-            <Field label="Password" htmlFor="password">
+            <Field label="Password" htmlFor={`${uid}-password`}>
               <Input
-                id="password"
+                id={`${uid}-password`}
                 type="password"
                 value={form.password}
                 onChange={(e) => update('password', e.target.value)}
@@ -222,9 +223,9 @@ export function ConnectionForm({ existing }: Props) {
               />
             </Field>
           </div>
-          <Field label="DB Index" htmlFor="db">
+          <Field label="DB Index" htmlFor={`${uid}-db`}>
             <Input
-              id="db"
+              id={`${uid}-db`}
               type="number"
               value={form.db}
               onChange={(e) => update('db', e.target.value)}
@@ -236,11 +237,11 @@ export function ConnectionForm({ existing }: Props) {
 
         <div className="flex items-center gap-3">
           <Switch
-            id="tls"
+            id={`${uid}-tls`}
             checked={form.tls}
             onCheckedChange={(v) => update('tls', v)}
           />
-          <Label htmlFor="tls" className="text-sm cursor-pointer">
+          <Label htmlFor={`${uid}-tls`} className="text-sm cursor-pointer">
             Use TLS (SSL)
           </Label>
         </div>
@@ -252,11 +253,11 @@ export function ConnectionForm({ existing }: Props) {
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <Switch
-            id="ssh"
+            id={`${uid}-ssh`}
             checked={form.sshEnabled}
             onCheckedChange={(v) => update('sshEnabled', v)}
           />
-          <Label htmlFor="ssh" className="text-sm font-semibold cursor-pointer">
+          <Label htmlFor={`${uid}-ssh`} className="text-sm font-semibold cursor-pointer">
             SSH Tunnel
           </Label>
         </div>
@@ -265,18 +266,18 @@ export function ConnectionForm({ existing }: Props) {
           <div className="space-y-4 pl-1">
             <div className="grid grid-cols-3 gap-3">
               <div className="col-span-2">
-                <Field label="SSH Host" htmlFor="sshHost">
+                <Field label="SSH Host" htmlFor={`${uid}-sshHost`}>
                   <Input
-                    id="sshHost"
+                    id={`${uid}-sshHost`}
                     value={form.sshHost}
                     onChange={(e) => update('sshHost', e.target.value)}
                     placeholder="bastion.example.com"
                   />
                 </Field>
               </div>
-              <Field label="SSH Port" htmlFor="sshPort">
+              <Field label="SSH Port" htmlFor={`${uid}-sshPort`}>
                 <Input
-                  id="sshPort"
+                  id={`${uid}-sshPort`}
                   type="number"
                   value={form.sshPort}
                   onChange={(e) => update('sshPort', e.target.value)}
@@ -286,18 +287,18 @@ export function ConnectionForm({ existing }: Props) {
               </Field>
             </div>
 
-            <Field label="SSH Username" htmlFor="sshUsername">
+            <Field label="SSH Username" htmlFor={`${uid}-sshUsername`}>
               <Input
-                id="sshUsername"
+                id={`${uid}-sshUsername`}
                 value={form.sshUsername}
                 onChange={(e) => update('sshUsername', e.target.value)}
                 placeholder="ubuntu"
               />
             </Field>
 
-            <Field label="SSH Password" htmlFor="sshPassword">
+            <Field label="SSH Password" htmlFor={`${uid}-sshPassword`}>
               <Input
-                id="sshPassword"
+                id={`${uid}-sshPassword`}
                 type="password"
                 value={form.sshPassword}
                 onChange={(e) => update('sshPassword', e.target.value)}

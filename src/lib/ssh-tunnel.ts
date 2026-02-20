@@ -27,7 +27,6 @@ export type SshTunnelConfig = {
 }
 
 declare global {
-  // biome-ignore lint/style/noVar: global augmentation required
   var __sshTunnels: Map<string, TunnelState> | undefined
 }
 

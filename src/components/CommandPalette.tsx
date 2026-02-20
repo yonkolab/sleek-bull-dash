@@ -109,7 +109,7 @@ export function CommandPalette() {
 
   const { data: activeQueues = [] } = useQuery({
     queryKey: ['queues', activeConnectionId],
-    queryFn: () => $getQueues({ data: { connectionId: activeConnectionId! } }),
+    queryFn: () => $getQueues({ data: { connectionId: activeConnectionId ?? '' } }),
     enabled: open && !!activeConnectionId,
     staleTime: 5_000,
   })
@@ -119,7 +119,7 @@ export function CommandPalette() {
   const { data: keyResults = [] } = useQuery({
     queryKey: ['key-search', activeConnectionId, search],
     queryFn: () =>
-      $searchKeys({ data: { connectionId: activeConnectionId!, pattern: `*${search}*`, count: 10 } }),
+      $searchKeys({ data: { connectionId: activeConnectionId ?? '', pattern: `*${search}*`, count: 10 } }),
     enabled: shouldSearchKeys,
     staleTime: 3_000,
   })
@@ -271,9 +271,11 @@ export function CommandPalette() {
   // ─── Fuzzy search ──────────────────────────────────────────────────────────
 
   const allSearchableItems = [...connectionItems, ...queueItems, ...commandItems]
+  // biome-ignore lint/correctness/useExhaustiveDependencies: allSearchableItems is a derived array that changes with its source data
   const fuse = useMemo(
     () => new Fuse(allSearchableItems, { keys: ['label', 'description'], threshold: 0.4 }),
-    [allSearchableItems],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [connectionItems, queueItems, commandItems],
   )
 
   const filtered = search

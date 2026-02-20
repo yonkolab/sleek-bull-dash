@@ -27,7 +27,7 @@ export function JobDetailSheet({ open, onClose, connectionId, queueName, jobId }
   const { data: rawData, isLoading } = useQuery({
     queryKey: ['job-detail', connectionId, queueName, jobId],
     queryFn: () =>
-      $getJobDetail({ data: { connectionId, queueName, jobId: jobId! } }),
+      $getJobDetail({ data: { connectionId, queueName, jobId: jobId ?? '' } }),
     enabled: open && jobId !== null,
   })
 

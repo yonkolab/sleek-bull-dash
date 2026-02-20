@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 
 export interface RadioOption {
   value: string
@@ -24,6 +24,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
 }) => {
   return (
     <div className={`flex flex-col gap-3 ${className}`}>
+      {/* biome-ignore lint/a11y/noLabelWithoutControl: storybook demo component */}
       <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
         {label}
       </label>

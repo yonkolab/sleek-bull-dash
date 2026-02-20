@@ -222,8 +222,8 @@ function QueuePage() {
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              Array.from({ length: 8 }).map((_, i) => (
-                <TableRow key={i}>
+              Array.from({ length: 8 }, (_, i) => `sk${i}`).map((skKey) => (
+                <TableRow key={skKey}>
                   <TableCell><Skeleton className="h-4 w-48" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-64" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-16 ml-auto" /></TableCell>
@@ -439,11 +439,11 @@ function LifecycleTimeline({ job, status }: { job: JobSummary; status: QueueStat
 
   return (
     <div className="flex items-center gap-1.5 flex-wrap">
-      {events.map((event, i) => {
+      {events.map((event) => {
         if (event.duration !== undefined) {
           return (
             <span
-              key={i}
+              key={event.label}
               className={cn('font-mono text-[10px]', event.color ?? 'text-muted-foreground')}
             >
               {formatDuration(event.duration)}
@@ -451,17 +451,17 @@ function LifecycleTimeline({ job, status }: { job: JobSummary; status: QueueStat
           )
         }
         return (
-          <Tooltip key={i}>
+          <Tooltip key={event.label}>
             <TooltipTrigger asChild>
               <span className="flex items-center gap-1 cursor-default">
                 <LifecycleDot status={event.label} />
                 <span className="text-[10px] text-muted-foreground font-mono">
-                  {formatTime(event.ts!)}
+                  {formatTime(event.ts ?? 0)}
                 </span>
               </span>
             </TooltipTrigger>
             <TooltipContent>
-              {event.label}: {new Date(event.ts!).toLocaleString()}
+              {event.label}: {new Date(event.ts ?? 0).toLocaleString()}
             </TooltipContent>
           </Tooltip>
         )

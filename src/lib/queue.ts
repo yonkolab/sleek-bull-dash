@@ -3,7 +3,6 @@ import { getRedisClient, getBullMQConnection, type ConnectionOptions } from '#/l
 
 // Two-level cache: connectionId → queueName → Queue instance
 declare global {
-  // biome-ignore lint/style/noVar: global augmentation required
   var __queueCaches: Map<string, Map<string, Queue>> | undefined
 }
 
@@ -12,6 +11,7 @@ function getQueueStore(connectionId: string): Map<string, Queue> {
   if (!globalThis.__queueCaches.has(connectionId)) {
     globalThis.__queueCaches.set(connectionId, new Map())
   }
+  // biome-ignore lint/style/noNonNullAssertion: guaranteed by .has() check above
   return globalThis.__queueCaches.get(connectionId)!
 }
 
@@ -25,6 +25,7 @@ export function getQueue(connectionId: string, opts: ConnectionOptions, name: st
       }),
     )
   }
+  // biome-ignore lint/style/noNonNullAssertion: guaranteed by .has() check above
   return store.get(name)!
 }
 

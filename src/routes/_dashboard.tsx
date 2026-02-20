@@ -73,7 +73,7 @@ function DashboardLayout() {
   // Queues for the active connection only — poll every 5s
   const { data: queues = [], refetch: refetchQueues } = useQuery({
     queryKey: ['queues', activeConnectionId],
-    queryFn: () => $getQueues({ data: { connectionId: activeConnectionId! } }),
+    queryFn: () => $getQueues({ data: { connectionId: activeConnectionId ?? '' } }),
     refetchInterval: 5000,
     enabled: !!activeConnectionId,
   })

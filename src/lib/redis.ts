@@ -17,7 +17,6 @@ export type RedisClient = {
 }
 
 declare global {
-  // biome-ignore lint/style/noVar: global augmentation required
   var __redisClients: Map<string, RedisClient> | undefined
 }
 
@@ -40,6 +39,7 @@ export function getRedisClient(connectionId: string, opts: ConnectionOptions): R
     }) as unknown as RedisClient
     store.set(connectionId, client)
   }
+  // biome-ignore lint/style/noNonNullAssertion: guaranteed by .has() check above
   return store.get(connectionId)!
 }
 

@@ -1,7 +1,6 @@
 import { prisma } from '#/db'
 
 declare global {
-  // biome-ignore lint/style/noVar: global augmentation required
   var __defaultConnectionEnsured: boolean | undefined
 }
 
