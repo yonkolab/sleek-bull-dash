@@ -1,0 +1,32 @@
+{
+  "projectName": "sleek-bull-dash",
+  "mode": "file-router",
+  "typescript": true,
+  "packageManager": "npm",
+  "includeExamples": true,
+  "tailwind": true,
+  "addOnOptions": {
+    "prisma": {
+      "database": "sqlite"
+    }
+  },
+  "envVarValues": {},
+  "git": false,
+  "routerOnly": false,
+  "version": 1,
+  "framework": "react-cra",
+  "chosenAddOns": [
+    "biome",
+    "cloudflare",
+    "shadcn",
+    "paraglide",
+    "form",
+    "store",
+    "better-auth",
+    "t3env",
+    "prisma",
+    "storybook",
+    "tanstack-query",
+    "table"
+  ]
+}
