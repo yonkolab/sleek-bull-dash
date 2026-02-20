@@ -44,7 +44,7 @@ export function JobDetailSheet({ open, onClose, connectionId, queueName, jobId }
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
       <SheetContent
         side="right"
-        className="w-[540px] sm:max-w-[540px] overflow-y-auto flex flex-col gap-0 p-0"
+        className="w-135 sm:max-w-135 overflow-y-auto flex flex-col gap-0 p-0"
       >
         <SheetHeader className="px-5 py-4 border-b border-border">
           <SheetTitle className="text-sm font-semibold">
