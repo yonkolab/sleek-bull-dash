@@ -99,6 +99,10 @@ npm run db:push        # push schema changes to database
 npm run storybook      # component development
 ```
 
+## Contributing
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions, code conventions, and the pull request process.
+
 ## License
 
 MIT
