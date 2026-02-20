@@ -1,6 +1,8 @@
 {
   "name": "sleek-bull-dash",
-  "private": true,
+  "version": "0.1.0",
+  "license": "MIT",
+  "private": false,
   "type": "module",
   "imports": {
     "#/*": "./src/*"
