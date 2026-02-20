@@ -164,7 +164,7 @@ function MonacoJson({ value, theme }: { value: unknown; theme: string }) {
     <div className="rounded-md overflow-hidden border border-border">
       <Suspense
         fallback={
-          <div className="h-[160px] bg-muted/30 flex items-center justify-center">
+          <div className="h-40 bg-muted/30 flex items-center justify-center">
             <Skeleton className="h-4 w-24" />
           </div>
         }
