@@ -18,6 +18,7 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as DashboardSettingsConnectionsRouteImport } from './routes/_dashboard/settings/connections'
 import { Route as DashboardQueuesQueueNameRouteImport } from './routes/_dashboard/queues.$queueName'
 import { Route as DashboardConnectionsConnectionIdRouteImport } from './routes/_dashboard/connections.$connectionId'
+import { Route as DashboardSettingsConnectionsIndexRouteImport } from './routes/_dashboard/settings/connections.index'
 import { Route as DashboardSettingsConnectionsNewRouteImport } from './routes/_dashboard/settings/connections.new'
 import { Route as DashboardSettingsConnectionsConnectionIdEditRouteImport } from './routes/_dashboard/settings/connections.$connectionId.edit'
 import { Route as DashboardConnectionsConnectionIdQueuesQueueNameRouteImport } from './routes/_dashboard/connections.$connectionId.queues.$queueName'
@@ -69,6 +70,12 @@ const DashboardConnectionsConnectionIdRoute =
     path: '/$connectionId',
     getParentRoute: () => DashboardConnectionsRoute,
   } as any)
+const DashboardSettingsConnectionsIndexRoute =
+  DashboardSettingsConnectionsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardSettingsConnectionsRoute,
+  } as any)
 const DashboardSettingsConnectionsNewRoute =
   DashboardSettingsConnectionsNewRouteImport.update({
     id: '/new',
@@ -98,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/settings/connections': typeof DashboardSettingsConnectionsRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/settings/connections/new': typeof DashboardSettingsConnectionsNewRoute
+  '/settings/connections/': typeof DashboardSettingsConnectionsIndexRoute
   '/connections/$connectionId/queues/$queueName': typeof DashboardConnectionsConnectionIdQueuesQueueNameRoute
   '/settings/connections/$connectionId/edit': typeof DashboardSettingsConnectionsConnectionIdEditRoute
 }
@@ -108,9 +116,9 @@ export interface FileRoutesByTo {
   '/queues': typeof DashboardQueuesRouteWithChildren
   '/connections/$connectionId': typeof DashboardConnectionsConnectionIdRouteWithChildren
   '/queues/$queueName': typeof DashboardQueuesQueueNameRoute
-  '/settings/connections': typeof DashboardSettingsConnectionsRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/settings/connections/new': typeof DashboardSettingsConnectionsNewRoute
+  '/settings/connections': typeof DashboardSettingsConnectionsIndexRoute
   '/connections/$connectionId/queues/$queueName': typeof DashboardConnectionsConnectionIdQueuesQueueNameRoute
   '/settings/connections/$connectionId/edit': typeof DashboardSettingsConnectionsConnectionIdEditRoute
 }
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/_dashboard/settings/connections': typeof DashboardSettingsConnectionsRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_dashboard/settings/connections/new': typeof DashboardSettingsConnectionsNewRoute
+  '/_dashboard/settings/connections/': typeof DashboardSettingsConnectionsIndexRoute
   '/_dashboard/connections/$connectionId/queues/$queueName': typeof DashboardConnectionsConnectionIdQueuesQueueNameRoute
   '/_dashboard/settings/connections/$connectionId/edit': typeof DashboardSettingsConnectionsConnectionIdEditRoute
 }
@@ -141,6 +150,7 @@ export interface FileRouteTypes {
     | '/settings/connections'
     | '/api/auth/$'
     | '/settings/connections/new'
+    | '/settings/connections/'
     | '/connections/$connectionId/queues/$queueName'
     | '/settings/connections/$connectionId/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -151,9 +161,9 @@ export interface FileRouteTypes {
     | '/queues'
     | '/connections/$connectionId'
     | '/queues/$queueName'
-    | '/settings/connections'
     | '/api/auth/$'
     | '/settings/connections/new'
+    | '/settings/connections'
     | '/connections/$connectionId/queues/$queueName'
     | '/settings/connections/$connectionId/edit'
   id:
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/_dashboard/settings/connections'
     | '/api/auth/$'
     | '/_dashboard/settings/connections/new'
+    | '/_dashboard/settings/connections/'
     | '/_dashboard/connections/$connectionId/queues/$queueName'
     | '/_dashboard/settings/connections/$connectionId/edit'
   fileRoutesById: FileRoutesById
@@ -244,6 +255,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardConnectionsConnectionIdRouteImport
       parentRoute: typeof DashboardConnectionsRoute
     }
+    '/_dashboard/settings/connections/': {
+      id: '/_dashboard/settings/connections/'
+      path: '/'
+      fullPath: '/settings/connections/'
+      preLoaderRoute: typeof DashboardSettingsConnectionsIndexRouteImport
+      parentRoute: typeof DashboardSettingsConnectionsRoute
+    }
     '/_dashboard/settings/connections/new': {
       id: '/_dashboard/settings/connections/new'
       path: '/new'
@@ -309,12 +327,15 @@ const DashboardQueuesRouteWithChildren = DashboardQueuesRoute._addFileChildren(
 
 interface DashboardSettingsConnectionsRouteChildren {
   DashboardSettingsConnectionsNewRoute: typeof DashboardSettingsConnectionsNewRoute
+  DashboardSettingsConnectionsIndexRoute: typeof DashboardSettingsConnectionsIndexRoute
   DashboardSettingsConnectionsConnectionIdEditRoute: typeof DashboardSettingsConnectionsConnectionIdEditRoute
 }
 
 const DashboardSettingsConnectionsRouteChildren: DashboardSettingsConnectionsRouteChildren =
   {
     DashboardSettingsConnectionsNewRoute: DashboardSettingsConnectionsNewRoute,
+    DashboardSettingsConnectionsIndexRoute:
+      DashboardSettingsConnectionsIndexRoute,
     DashboardSettingsConnectionsConnectionIdEditRoute:
       DashboardSettingsConnectionsConnectionIdEditRoute,
   }

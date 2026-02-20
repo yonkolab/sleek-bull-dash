@@ -73,6 +73,7 @@ model Connection {
   sshPassword   String?
   sshPrivateKey String?
   sshKeyType    String?
+  environment   String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

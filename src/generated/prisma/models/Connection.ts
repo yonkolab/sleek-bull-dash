@@ -54,6 +54,7 @@ export type ConnectionMinAggregateOutputType = {
   sshPassword: string | null
   sshPrivateKey: string | null
   sshKeyType: string | null
+  environment: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -74,6 +75,7 @@ export type ConnectionMaxAggregateOutputType = {
   sshPassword: string | null
   sshPrivateKey: string | null
   sshKeyType: string | null
+  environment: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -94,6 +96,7 @@ export type ConnectionCountAggregateOutputType = {
   sshPassword: number
   sshPrivateKey: number
   sshKeyType: number
+  environment: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -128,6 +131,7 @@ export type ConnectionMinAggregateInputType = {
   sshPassword?: true
   sshPrivateKey?: true
   sshKeyType?: true
+  environment?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -148,6 +152,7 @@ export type ConnectionMaxAggregateInputType = {
   sshPassword?: true
   sshPrivateKey?: true
   sshKeyType?: true
+  environment?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -168,6 +173,7 @@ export type ConnectionCountAggregateInputType = {
   sshPassword?: true
   sshPrivateKey?: true
   sshKeyType?: true
+  environment?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -275,6 +281,7 @@ export type ConnectionGroupByOutputType = {
   sshPassword: string | null
   sshPrivateKey: string | null
   sshKeyType: string | null
+  environment: string | null
   createdAt: Date
   updatedAt: Date
   _count: ConnectionCountAggregateOutputType | null
@@ -318,6 +325,7 @@ export type ConnectionWhereInput = {
   sshPassword?: Prisma.StringNullableFilter<"Connection"> | string | null
   sshPrivateKey?: Prisma.StringNullableFilter<"Connection"> | string | null
   sshKeyType?: Prisma.StringNullableFilter<"Connection"> | string | null
+  environment?: Prisma.StringNullableFilter<"Connection"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Connection"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Connection"> | Date | string
 }
@@ -338,6 +346,7 @@ export type ConnectionOrderByWithRelationInput = {
   sshPassword?: Prisma.SortOrderInput | Prisma.SortOrder
   sshPrivateKey?: Prisma.SortOrderInput | Prisma.SortOrder
   sshKeyType?: Prisma.SortOrderInput | Prisma.SortOrder
+  environment?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -361,6 +370,7 @@ export type ConnectionWhereUniqueInput = Prisma.AtLeast<{
   sshPassword?: Prisma.StringNullableFilter<"Connection"> | string | null
   sshPrivateKey?: Prisma.StringNullableFilter<"Connection"> | string | null
   sshKeyType?: Prisma.StringNullableFilter<"Connection"> | string | null
+  environment?: Prisma.StringNullableFilter<"Connection"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Connection"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Connection"> | Date | string
 }, "id">
@@ -381,6 +391,7 @@ export type ConnectionOrderByWithAggregationInput = {
   sshPassword?: Prisma.SortOrderInput | Prisma.SortOrder
   sshPrivateKey?: Prisma.SortOrderInput | Prisma.SortOrder
   sshKeyType?: Prisma.SortOrderInput | Prisma.SortOrder
+  environment?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ConnectionCountOrderByAggregateInput
@@ -409,6 +420,7 @@ export type ConnectionScalarWhereWithAggregatesInput = {
   sshPassword?: Prisma.StringNullableWithAggregatesFilter<"Connection"> | string | null
   sshPrivateKey?: Prisma.StringNullableWithAggregatesFilter<"Connection"> | string | null
   sshKeyType?: Prisma.StringNullableWithAggregatesFilter<"Connection"> | string | null
+  environment?: Prisma.StringNullableWithAggregatesFilter<"Connection"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Connection"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Connection"> | Date | string
 }
@@ -429,6 +441,7 @@ export type ConnectionCreateInput = {
   sshPassword?: string | null
   sshPrivateKey?: string | null
   sshKeyType?: string | null
+  environment?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -449,6 +462,7 @@ export type ConnectionUncheckedCreateInput = {
   sshPassword?: string | null
   sshPrivateKey?: string | null
   sshKeyType?: string | null
+  environment?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -469,6 +483,7 @@ export type ConnectionUpdateInput = {
   sshPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sshPrivateKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sshKeyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  environment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -489,6 +504,7 @@ export type ConnectionUncheckedUpdateInput = {
   sshPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sshPrivateKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sshKeyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  environment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -509,6 +525,7 @@ export type ConnectionCreateManyInput = {
   sshPassword?: string | null
   sshPrivateKey?: string | null
   sshKeyType?: string | null
+  environment?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -529,6 +546,7 @@ export type ConnectionUpdateManyMutationInput = {
   sshPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sshPrivateKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sshKeyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  environment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -549,6 +567,7 @@ export type ConnectionUncheckedUpdateManyInput = {
   sshPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sshPrivateKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sshKeyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  environment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -569,6 +588,7 @@ export type ConnectionCountOrderByAggregateInput = {
   sshPassword?: Prisma.SortOrder
   sshPrivateKey?: Prisma.SortOrder
   sshKeyType?: Prisma.SortOrder
+  environment?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -595,6 +615,7 @@ export type ConnectionMaxOrderByAggregateInput = {
   sshPassword?: Prisma.SortOrder
   sshPrivateKey?: Prisma.SortOrder
   sshKeyType?: Prisma.SortOrder
+  environment?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -615,6 +636,7 @@ export type ConnectionMinOrderByAggregateInput = {
   sshPassword?: Prisma.SortOrder
   sshPrivateKey?: Prisma.SortOrder
   sshKeyType?: Prisma.SortOrder
+  environment?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -659,6 +681,7 @@ export type ConnectionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   sshPassword?: boolean
   sshPrivateKey?: boolean
   sshKeyType?: boolean
+  environment?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["connection"]>
@@ -679,6 +702,7 @@ export type ConnectionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   sshPassword?: boolean
   sshPrivateKey?: boolean
   sshKeyType?: boolean
+  environment?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["connection"]>
@@ -699,6 +723,7 @@ export type ConnectionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   sshPassword?: boolean
   sshPrivateKey?: boolean
   sshKeyType?: boolean
+  environment?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["connection"]>
@@ -719,11 +744,12 @@ export type ConnectionSelectScalar = {
   sshPassword?: boolean
   sshPrivateKey?: boolean
   sshKeyType?: boolean
+  environment?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ConnectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "host" | "port" | "password" | "db" | "tls" | "isDefault" | "sshEnabled" | "sshHost" | "sshPort" | "sshUsername" | "sshPassword" | "sshPrivateKey" | "sshKeyType" | "createdAt" | "updatedAt", ExtArgs["result"]["connection"]>
+export type ConnectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "host" | "port" | "password" | "db" | "tls" | "isDefault" | "sshEnabled" | "sshHost" | "sshPort" | "sshUsername" | "sshPassword" | "sshPrivateKey" | "sshKeyType" | "environment" | "createdAt" | "updatedAt", ExtArgs["result"]["connection"]>
 
 export type $ConnectionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Connection"
@@ -744,6 +770,7 @@ export type $ConnectionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     sshPassword: string | null
     sshPrivateKey: string | null
     sshKeyType: string | null
+    environment: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["connection"]>
@@ -1184,6 +1211,7 @@ export interface ConnectionFieldRefs {
   readonly sshPassword: Prisma.FieldRef<"Connection", 'String'>
   readonly sshPrivateKey: Prisma.FieldRef<"Connection", 'String'>
   readonly sshKeyType: Prisma.FieldRef<"Connection", 'String'>
+  readonly environment: Prisma.FieldRef<"Connection", 'String'>
   readonly createdAt: Prisma.FieldRef<"Connection", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Connection", 'DateTime'>
 }

@@ -888,6 +888,7 @@ export const ConnectionScalarFieldEnum = {
   sshPassword: 'sshPassword',
   sshPrivateKey: 'sshPrivateKey',
   sshKeyType: 'sshKeyType',
+  environment: 'environment',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

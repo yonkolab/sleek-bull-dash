@@ -24,6 +24,7 @@ export type ConnectionSummary = {
   sshUsername?: string
   sshKeyType?: string
   hasKey: boolean
+  environment?: string
   createdAt: string
 }
 
@@ -41,6 +42,7 @@ function toSummary(conn: {
   sshUsername: string | null
   sshKeyType: string | null
   sshPrivateKey: string | null
+  environment: string | null
   createdAt: Date
 }): ConnectionSummary {
   return {
@@ -57,6 +59,7 @@ function toSummary(conn: {
     sshUsername: conn.sshUsername ?? undefined,
     sshKeyType: conn.sshKeyType ?? undefined,
     hasKey: conn.sshPrivateKey !== null,
+    environment: conn.environment ?? undefined,
     createdAt: conn.createdAt.toISOString(),
   }
 }
@@ -86,6 +89,7 @@ const ConnectionInput = z.object({
   sshPassword: z.string().optional(),
   sshPrivateKey: z.string().optional(), // plaintext from file upload; encrypted server-side
   sshKeyType: z.enum(['pem', 'ppk']).optional(),
+  environment: z.string().optional(),
 })
 
 export const $createConnection = createServerFn({ method: 'POST' })
@@ -108,6 +112,7 @@ export const $createConnection = createServerFn({ method: 'POST' })
         sshPassword: data.sshPassword ?? null,
         sshPrivateKey: encryptedKey,
         sshKeyType: data.sshKeyType ?? null,
+        environment: data.environment ?? null,
       },
     })
     return toSummary(conn)

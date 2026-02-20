@@ -9,6 +9,7 @@ import { Label } from '#/components/ui/label'
 import { Switch } from '#/components/ui/switch'
 import { Separator } from '#/components/ui/separator'
 import { Badge } from '#/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#/components/ui/select'
 import { $createConnection, $updateConnection, $testConnection, type ConnectionSummary } from '#/server/connection-fns'
 
 type FormState = {
@@ -18,6 +19,7 @@ type FormState = {
   password: string
   db: string
   tls: boolean
+  environment: string
   sshEnabled: boolean
   sshHost: string
   sshPort: string
@@ -38,13 +40,17 @@ export function ConnectionForm({ existing }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const uid = useId()
 
+  const initialHost = existing?.host ?? 'localhost'
+  const isLocalhost = (h: string) => h === 'localhost' || h === '127.0.0.1'
+
   const [form, setForm] = useState<FormState>({
     name: existing?.name ?? '',
-    host: existing?.host ?? 'localhost',
+    host: initialHost,
     port: String(existing?.port ?? 6379),
     password: '',
     db: String(existing?.db ?? 0),
     tls: existing?.tls ?? false,
+    environment: existing?.environment ?? (isLocalhost(initialHost) ? 'development' : ''),
     sshEnabled: existing?.sshEnabled ?? false,
     sshHost: existing?.sshHost ?? '',
     sshPort: String(existing?.sshPort ?? 22),
@@ -58,7 +64,13 @@ export function ConnectionForm({ existing }: Props) {
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null)
 
   function update(key: keyof FormState, value: string | boolean) {
-    setForm((prev) => ({ ...prev, [key]: value }))
+    setForm((prev) => {
+      const next = { ...prev, [key]: value }
+      if (key === 'host' && typeof value === 'string' && !prev.environment) {
+        next.environment = isLocalhost(value) ? 'development' : ''
+      }
+      return next
+    })
     setTestResult(null)
   }
 
@@ -105,6 +117,7 @@ export function ConnectionForm({ existing }: Props) {
           sshPassword: form.sshEnabled && form.sshPassword ? form.sshPassword : undefined,
           sshPrivateKey: form.sshEnabled && form.sshPrivateKey ? form.sshPrivateKey : undefined,
           sshKeyType: form.sshEnabled && form.sshKeyType ? form.sshKeyType : undefined,
+          environment: form.environment || undefined,
         },
       }),
     onSuccess: () => {
@@ -134,6 +147,7 @@ export function ConnectionForm({ existing }: Props) {
             sshPassword: form.sshEnabled && form.sshPassword ? form.sshPassword : undefined,
             sshPrivateKey: form.sshEnabled && form.sshPrivateKey ? form.sshPrivateKey : undefined,
             sshKeyType: form.sshEnabled && form.sshKeyType ? form.sshKeyType : undefined,
+            environment: form.environment || undefined,
           },
         },
       }),
@@ -176,15 +190,36 @@ export function ConnectionForm({ existing }: Props) {
       <div className="space-y-4">
         <h2 className="text-sm font-semibold">Redis Connection</h2>
 
-        <Field label="Name" htmlFor={`${uid}-name`}>
-          <Input
-            id={`${uid}-name`}
-            value={form.name}
-            onChange={(e) => update('name', e.target.value)}
-            placeholder="Production"
-            required
-          />
-        </Field>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Name" htmlFor={`${uid}-name`}>
+            <Input
+              id={`${uid}-name`}
+              value={form.name}
+              onChange={(e) => update('name', e.target.value)}
+              placeholder="My Redis"
+              required
+            />
+          </Field>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium">Environment</Label>
+            <Select
+              value={form.environment || 'none'}
+              onValueChange={(v) => update('environment', v === 'none' ? '' : v)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="None" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">None</SelectItem>
+                <SelectItem value="production">Production</SelectItem>
+                <SelectItem value="staging">Staging</SelectItem>
+                <SelectItem value="development">Development</SelectItem>
+                <SelectItem value="local">Local</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
         <div className="grid grid-cols-3 gap-3">
           <div className="col-span-2">

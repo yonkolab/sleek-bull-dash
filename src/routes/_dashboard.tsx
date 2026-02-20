@@ -70,6 +70,8 @@ function DashboardLayout() {
     refetchInterval: 30_000,
   })
 
+  const activeConnection = connections.find((c) => c.id === activeConnectionId)
+
   // Queues for the active connection only — poll every 5s
   const { data: queues = [], refetch: refetchQueues } = useQuery({
     queryKey: ['queues', activeConnectionId],
@@ -234,6 +236,7 @@ function DashboardLayout() {
           <header className="flex items-center h-12 px-4 border-b border-border shrink-0 gap-2">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="h-4" />
+            <EnvironmentBadge environment={activeConnection?.environment} />
             <div className="ml-auto">
               <KeyboardHint />
             </div>
@@ -247,6 +250,23 @@ function DashboardLayout() {
       {/* Global Ctrl+K command palette — mounted outside the main flex container */}
       <CommandPalette />
     </SidebarProvider>
+  )
+}
+
+function EnvironmentBadge({ environment }: { environment?: string }) {
+  if (!environment) return null
+  const isProd = environment === 'production'
+  return (
+    <Badge
+      variant={isProd ? 'destructive' : 'outline'}
+      className={
+        isProd
+          ? undefined
+          : 'bg-green-600/15 text-green-500 border-green-600/30 dark:text-green-400'
+      }
+    >
+      {environment.toUpperCase()}
+    </Badge>
   )
 }
 
