@@ -11,3 +11,8 @@ dist-ssr
 .vinxi
 __unconfig*
 todos.json
+
+# SQLite databases (local dev data, never commit)
+*.db
+*.db-wal
+*.db-shm
