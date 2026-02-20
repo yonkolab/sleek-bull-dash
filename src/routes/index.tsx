@@ -5,7 +5,7 @@ export const Route = createFileRoute('/')({
   beforeLoad: async () => {
     const session = await authClient.getSession()
     if (session?.data?.user) {
-      throw redirect({ to: '/queues' })
+      throw redirect({ to: '/connections' })
     }
     throw redirect({ to: '/login' })
   },

@@ -1,19 +1,31 @@
-import { Queue, type Job, type JobType } from 'bullmq' // Job used in jobToSummary
-import { getRedisClient, getBullMQConnection } from '#/lib/redis'
+import { Queue, type Job, type JobType } from 'bullmq'
+import { getRedisClient, getBullMQConnection, type ConnectionOptions } from '#/lib/redis'
 
-// Cache queue instances — same connection options, new Queue per name
-const queueCache = new Map<string, Queue>()
+// Two-level cache: connectionId → queueName → Queue instance
+declare global {
+  // biome-ignore lint/style/noVar: global augmentation required
+  var __queueCaches: Map<string, Map<string, Queue>> | undefined
+}
 
-export function getQueue(name: string): Queue {
-  if (!queueCache.has(name)) {
-    queueCache.set(
+function getQueueStore(connectionId: string): Map<string, Queue> {
+  globalThis.__queueCaches ??= new Map()
+  if (!globalThis.__queueCaches.has(connectionId)) {
+    globalThis.__queueCaches.set(connectionId, new Map())
+  }
+  return globalThis.__queueCaches.get(connectionId)!
+}
+
+export function getQueue(connectionId: string, opts: ConnectionOptions, name: string): Queue {
+  const store = getQueueStore(connectionId)
+  if (!store.has(name)) {
+    store.set(
       name,
       new Queue(name, {
-        connection: getBullMQConnection(),
+        connection: getBullMQConnection(opts),
       }),
     )
   }
-  return queueCache.get(name)!
+  return store.get(name)!
 }
 
 export type QueueStatus = 'completed' | 'failed' | 'active' | 'waiting' | 'delayed' | 'paused'
@@ -55,8 +67,7 @@ function jobToSummary(job: Job, status: QueueStatus): JobSummary {
   }
 }
 
-// Discover queues by scanning Redis for BullMQ meta keys
-export async function discoverQueues(): Promise<string[]> {
+export async function discoverQueues(connectionId: string, opts: ConnectionOptions): Promise<string[]> {
   const configured = process.env.BULLMQ_QUEUES
   if (configured?.trim()) {
     return configured
@@ -65,7 +76,7 @@ export async function discoverQueues(): Promise<string[]> {
       .filter(Boolean)
   }
 
-  const redis = getRedisClient()
+  const redis = getRedisClient(connectionId, opts)
   const keys = await redis.keys('*:meta')
   const names = new Set<string>()
 
@@ -77,8 +88,12 @@ export async function discoverQueues(): Promise<string[]> {
   return [...names].sort()
 }
 
-export async function getQueueCounts(queueName: string): Promise<QueueCounts> {
-  const queue = getQueue(queueName)
+export async function getQueueCounts(
+  connectionId: string,
+  opts: ConnectionOptions,
+  queueName: string,
+): Promise<QueueCounts> {
+  const queue = getQueue(connectionId, opts, queueName)
   return queue.getJobCounts(
     'active',
     'completed',
@@ -90,47 +105,82 @@ export async function getQueueCounts(queueName: string): Promise<QueueCounts> {
 }
 
 export async function getQueueJobs(
+  connectionId: string,
+  opts: ConnectionOptions,
   queueName: string,
   status: QueueStatus,
   start = 0,
   end = 49,
 ): Promise<JobSummary[]> {
-  const queue = getQueue(queueName)
+  const queue = getQueue(connectionId, opts, queueName)
   const jobTypes: JobType[] = [status as JobType]
   const jobs = await queue.getJobs(jobTypes, start, end, true)
   return jobs.map((job) => jobToSummary(job, status))
 }
 
-export async function retryJob(queueName: string, jobId: string): Promise<void> {
-  const queue = getQueue(queueName)
+export async function retryJob(
+  connectionId: string,
+  opts: ConnectionOptions,
+  queueName: string,
+  jobId: string,
+): Promise<void> {
+  const queue = getQueue(connectionId, opts, queueName)
   const job = await queue.getJob(jobId)
   if (!job) throw new Error(`Job ${jobId} not found in queue ${queueName}`)
   await job.retry()
 }
 
-export async function removeJob(queueName: string, jobId: string): Promise<void> {
-  const queue = getQueue(queueName)
+export async function removeJob(
+  connectionId: string,
+  opts: ConnectionOptions,
+  queueName: string,
+  jobId: string,
+): Promise<void> {
+  const queue = getQueue(connectionId, opts, queueName)
   const job = await queue.getJob(jobId)
   if (!job) throw new Error(`Job ${jobId} not found in queue ${queueName}`)
   await job.remove()
 }
 
 export async function cleanQueue(
+  connectionId: string,
+  opts: ConnectionOptions,
   queueName: string,
   status: 'completed' | 'failed',
 ): Promise<void> {
-  const queue = getQueue(queueName)
+  const queue = getQueue(connectionId, opts, queueName)
   await queue.clean(0, 1000, status)
 }
 
-export async function pauseQueue(queueName: string): Promise<void> {
-  await getQueue(queueName).pause()
+export async function pauseQueue(
+  connectionId: string,
+  opts: ConnectionOptions,
+  queueName: string,
+): Promise<void> {
+  await getQueue(connectionId, opts, queueName).pause()
 }
 
-export async function resumeQueue(queueName: string): Promise<void> {
-  await getQueue(queueName).resume()
+export async function resumeQueue(
+  connectionId: string,
+  opts: ConnectionOptions,
+  queueName: string,
+): Promise<void> {
+  await getQueue(connectionId, opts, queueName).resume()
 }
 
-export async function isPaused(queueName: string): Promise<boolean> {
-  return getQueue(queueName).isPaused()
+export async function isPaused(
+  connectionId: string,
+  opts: ConnectionOptions,
+  queueName: string,
+): Promise<boolean> {
+  return getQueue(connectionId, opts, queueName).isPaused()
+}
+
+export async function retryAllFailed(
+  connectionId: string,
+  opts: ConnectionOptions,
+  queueName: string,
+): Promise<void> {
+  const queue = getQueue(connectionId, opts, queueName)
+  await queue.retryJobs({ count: 1000, state: 'failed' })
 }

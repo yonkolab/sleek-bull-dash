@@ -33,7 +33,7 @@ function LoginPage() {
       return
     }
 
-    navigate({ to: '/queues' })
+    navigate({ to: '/connections' })
   }
 
   return (

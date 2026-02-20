@@ -1,35 +1,79 @@
-// Use BullMQ's bundled ioredis for direct Redis operations
-// to avoid version conflicts between our ioredis and BullMQ's.
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const IORedis = require('bullmq/node_modules/ioredis')
+import IORedis from 'ioredis'
 
-type RedisClient = {
+export type ConnectionOptions = {
+  host: string
+  port: number
+  password?: string
+  db?: number
+  tls?: boolean
+}
+
+export type RedisClient = {
   keys: (pattern: string) => Promise<string[]>
+  scan: (cursor: string, matchOption: 'MATCH', pattern: string, countOption: 'COUNT', count: number) => Promise<[string, string[]]>
+  type: (key: string) => Promise<string>
+  ttl: (key: string) => Promise<number>
   quit: () => Promise<void>
 }
 
 declare global {
   // biome-ignore lint/style/noVar: global augmentation required
-  var __redisClient: RedisClient | undefined
+  var __redisClients: Map<string, RedisClient> | undefined
 }
 
-export function getRedisClient(): RedisClient {
-  if (!globalThis.__redisClient) {
-    const url = process.env.REDIS_URL ?? 'redis://localhost:6379'
-    // biome-ignore lint/suspicious/noExplicitAny: dynamic require
-    globalThis.__redisClient = new (IORedis as any)(url, {
+function getStore(): Map<string, RedisClient> {
+  globalThis.__redisClients ??= new Map()
+  return globalThis.__redisClients
+}
+
+export function getRedisClient(connectionId: string, opts: ConnectionOptions): RedisClient {
+  const store = getStore()
+  if (!store.has(connectionId)) {
+    const client = new IORedis({
+      host: opts.host,
+      port: opts.port,
+      password: opts.password,
+      db: opts.db ?? 0,
+      tls: opts.tls ? {} : undefined,
       maxRetriesPerRequest: null,
       lazyConnect: true,
-    }) as RedisClient
+    }) as unknown as RedisClient
+    store.set(connectionId, client)
   }
-  return globalThis.__redisClient
+  return store.get(connectionId)!
 }
 
 /**
  * Returns plain connection options for BullMQ (avoids ioredis version conflicts).
  * BullMQ accepts these and uses its own bundled ioredis internally.
  */
-export function getBullMQConnection() {
+export function getBullMQConnection(opts: ConnectionOptions) {
+  return {
+    host: opts.host,
+    port: opts.port,
+    password: opts.password,
+    db: opts.db ?? 0,
+    tls: opts.tls ? {} : undefined,
+    maxRetriesPerRequest: null as null,
+  }
+}
+
+/**
+ * Removes cached clients for a connection (call when editing or deleting a connection).
+ */
+export function evictConnectionClients(connectionId: string): void {
+  const store = getStore()
+  const client = store.get(connectionId)
+  if (client) {
+    client.quit().catch(() => {})
+    store.delete(connectionId)
+  }
+}
+
+/**
+ * Parses REDIS_URL into ConnectionOptions (used only for seeding the default connection).
+ */
+export function getDefaultConnectionOptions(): ConnectionOptions {
   const url = process.env.REDIS_URL ?? 'redis://localhost:6379'
   try {
     const parsed = new URL(url)
@@ -38,9 +82,8 @@ export function getBullMQConnection() {
       port: Number(parsed.port) || 6379,
       password: parsed.password || undefined,
       db: Number(parsed.pathname.slice(1)) || 0,
-      maxRetriesPerRequest: null as null,
     }
   } catch {
-    return { host: 'localhost', port: 6379, maxRetriesPerRequest: null as null }
+    return { host: 'localhost', port: 6379 }
   }
 }

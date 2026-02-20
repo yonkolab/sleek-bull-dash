@@ -54,7 +54,8 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Connection: 'Connection'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -126,6 +127,29 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const ConnectionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  host: 'host',
+  port: 'port',
+  password: 'password',
+  db: 'db',
+  tls: 'tls',
+  isDefault: 'isDefault',
+  sshEnabled: 'sshEnabled',
+  sshHost: 'sshHost',
+  sshPort: 'sshPort',
+  sshUsername: 'sshUsername',
+  sshPassword: 'sshPassword',
+  sshPrivateKey: 'sshPrivateKey',
+  sshKeyType: 'sshKeyType',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ConnectionScalarFieldEnum = (typeof ConnectionScalarFieldEnum)[keyof typeof ConnectionScalarFieldEnum]
 
 
 export const SortOrder = {

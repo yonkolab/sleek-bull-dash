@@ -1,9 +1,21 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, Outlet, useRouterState } from '@tanstack/react-router'
 
-// /queues without a specific queue → go to dashboard index
+// Layout wrapper for all /queues/* routes.
+// When on exact /queues (no child): redirect to root.
+// When a child route is matched (e.g. /queues/$queueName backward-compat shim): render Outlet.
 export const Route = createFileRoute('/_dashboard/queues')({
-  beforeLoad: () => {
-    throw redirect({ to: '/_dashboard/' })
-  },
-  component: () => null,
+  component: QueuesLayout,
 })
+
+function QueuesLayout() {
+  const routerState = useRouterState()
+  const isExactMatch =
+    routerState.matches[routerState.matches.length - 1]?.routeId === '/_dashboard/queues'
+
+  if (!isExactMatch) {
+    return <Outlet />
+  }
+
+  // Exact /queues with no child — nothing meaningful here, go home
+  return null
+}
