@@ -110,7 +110,7 @@ function DashboardLayout() {
               <div className="flex items-center justify-center w-7 h-7 rounded-md bg-primary text-primary-foreground shrink-0">
                 <Layers className="w-4 h-4" />
               </div>
-              <span className="font-semibold text-sm">QueueDash</span>
+              <span className="font-semibold text-sm">SleekBullDash</span>
               {totalFailed > 0 && (
                 <Tooltip>
                   <TooltipTrigger asChild>
