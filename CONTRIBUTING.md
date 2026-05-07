@@ -23,7 +23,7 @@ Copy `.env.local` (or create it) with at minimum:
 
 ```bash
 BETTER_AUTH_SECRET=<generate with: npx @better-auth/cli secret>
-BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_URL=http://localhost:3001
 DATABASE_URL="file:./dev.db"
 REDIS_URL=redis://localhost:6379
 ```
@@ -47,7 +47,15 @@ npm run db:push       # create SQLite tables
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The first user you create via the Better Auth CLI (or directly in the DB) becomes your admin account.
+Open [http://localhost:3001](http://localhost:3001). Public sign-up is disabled, so create your first user with:
+
+```bash
+npm run db:studio
+```
+
+Create one `User` row and one `Account` row. In `Account`, set `providerId=credential`, set
+`accountId` and `userId` to the same user id, and store a Better Auth-compatible password hash
+in `password`.
 
 ## Project Structure
 
