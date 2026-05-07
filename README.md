@@ -2,6 +2,9 @@
 
 An open-source, self-hosted BullMQ dashboard built with TanStack Start, shadcn/ui, and Better Auth.
 
+<img width="1912" height="956" alt="image" src="https://github.com/user-attachments/assets/cf8db5fa-ffbc-47d0-931d-8c180efc8d51" />
+
+
 ## Features
 
 - **Queue monitoring** — view all BullMQ queues with job counts per status
